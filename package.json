@@ -4,7 +4,9 @@
   "description": "A web app to store our bookmarks",
   "main": "./dist/index.js",
   "scripts": {
-    "install": "node package/install.js"
+    "install": "node package/install.js",
+    "watch-package": "tsc --watch --project tsconfig.package.json",
+    "watch-app": "tsc --watch --project tsconfig.app.json"
   },
   "repository": {
     "type": "git",
