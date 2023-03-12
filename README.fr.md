@@ -3,14 +3,14 @@
 
 # My bookmarks
 
-## About
+## À propos
 Une application web pour stocker nos favoris internet. 
 
 ## Installation
 
 Lancez `npm run install`.
 
-Ceci créera l'architecture du dossier de distribution (`dist) et créera les fichiers de données.
+Ceci créera l'architecture du dossier de distribution (`dist`) et créera les fichiers de données.
 
 Notez bien que le dossier `dist` déjà existant est automatiquement effacé durant l'installation. Si vos fichiers sources sont présent dans le dossier `src` ce n'est pas grave : il vous suffit de relancer `npm run build-app` pour retrouver votre dossier `dist` comme il était. 
 
