@@ -22,6 +22,7 @@ function initFiles() {
     }
 }
 if (typeof require !== 'undefined' && require.main === module) {
+    console.log(process.argv);
     createFolders();
     initFiles();
 }

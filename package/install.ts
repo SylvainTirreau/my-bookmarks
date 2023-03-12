@@ -7,7 +7,6 @@ function createFolders() {
   } catch (err: any) {
     console.log(`Cannot create ${path}. Error: ${err.message}`)
   }
-
 }
 
 function initFiles() {
@@ -22,6 +21,7 @@ function initFiles() {
 }
 
 if (typeof require !== 'undefined' && require.main === module) {
+  // Todo: remove folders if already exists
   createFolders()
   initFiles()
 }
