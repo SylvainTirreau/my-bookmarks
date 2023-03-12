@@ -1,0 +1,27 @@
+{
+  "name": "my-bookmarks",
+  "version": "0.0.1",
+  "description": "A web app to store our bookmarks",
+  "main": "./dist/index.js",
+  "scripts": {
+    "install": "node package/install.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SylvainTirreau/my-bookmarks.git"
+  },
+  "author": {
+    "name": "Sylvain Tirreau",
+    "email": "sylvain@tirreau.fr",
+    "url": "https://sylvain.tirreau.fr"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SylvainTirreau/my-bookmarks/issues"
+  },
+  "homepage": "https://github.com/SylvainTirreau/my-bookmarks#readme",
+  "devDependencies": {
+    "@types/node": "^18.15.0",
+    "typescript": "^4.9.5"
+  }
+}
