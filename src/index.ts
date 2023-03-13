@@ -10,11 +10,11 @@ app.set('view engine', 'html')
 nunjucks.configure(join('dist', 'assets', 'html'), {autoescape: true, express: app, watch: true})
 
 app.get('/', ((req: Request, res: Response) => {
-  console.log()
+  res.render('index.html', { title: "Mon  titre à moi que j'ai", test: "OK" })
 }))
 
 app.get('/:labels', ((req: Request, res: Response) => {
-  console.log(req.params.labels)
+  res.render('index.html', { title: "Mon  titre à moi que j'ai", test: req.params.labels })
 }))
 
 app.use((req: Request, res: Response) => {
