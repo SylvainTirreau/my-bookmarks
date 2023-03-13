@@ -1,6 +1,5 @@
 import {config} from "./config"
 import {copyFileSync, rmSync, mkdirSync, cpSync} from "fs";
-import {join} from "path";
 
 export function copyFileFromSrcToDist(srcPath: string) {
   const destPath = srcPath.replace(config.sourceFolder, config.distFolder)
