@@ -6,6 +6,7 @@
   "scripts": {
     "install": "node package/install.js",
     "watch-package": "tsc --watch --project tsconfig.package.json",
+    "build-package": "tsc --project tsconfig.package.json",
     "watch-app": "node package/watchHtml.js && tsc --watch --project tsconfig.app.json"
   },
   "repository": {

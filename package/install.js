@@ -2,15 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const path_1 = require("path");
-const distPath = 'dist';
+const config_1 = require("./config");
 function removeDistFolderIfExists() {
-    // NB: if dist folder change, change it also in index.ts for static folder variable. Insert a global variable for that if needed.
-    if ((0, fs_1.existsSync)(distPath)) {
-        (0, fs_1.rmSync)(distPath, { recursive: true, force: true });
+    if ((0, fs_1.existsSync)(config_1.config.distFolder)) {
+        (0, fs_1.rmSync)(config_1.config.distFolder, { recursive: true, force: true });
     }
 }
 function createFolders() {
-    const foldersPaths = [(0, path_1.join)(distPath, 'data', 'links'), (0, path_1.join)(distPath, 'assets')];
+    const foldersPaths = [(0, path_1.join)(config_1.config.distFolder, 'data', 'links'), (0, path_1.join)(config_1.config.distFolder, 'assets', 'html')];
     for (const folderPath of foldersPaths) {
         try {
             (0, fs_1.mkdirSync)(folderPath, { recursive: true });
@@ -21,7 +20,7 @@ function createFolders() {
     }
 }
 function initFiles() {
-    const filesPaths = [(0, path_1.join)(distPath, 'data', 'labels.json'), (0, path_1.join)(distPath, 'data', 'links.json')];
+    const filesPaths = [(0, path_1.join)(config_1.config.distFolder, 'data', 'labels.json'), (0, path_1.join)(config_1.config.distFolder, 'data', 'links.json')];
     for (const filePath of filesPaths) {
         try {
             (0, fs_1.appendFileSync)(filePath, '{}');

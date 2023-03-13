@@ -5,6 +5,7 @@
 
 ## À propos
 Une application web pour stocker nos favoris internet. 
+L'application est actuellement en cours de développement et n'est pas encore utilisable.
 
 ## Installation
 

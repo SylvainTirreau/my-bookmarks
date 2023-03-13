@@ -1,17 +1,15 @@
 import { mkdirSync, appendFileSync, existsSync, rmSync } from "fs"
 import { join } from 'path'
-
-const distPath = 'dist'
+import { config } from './config'
 
 function removeDistFolderIfExists() {
-  // NB: if dist folder change, change it also in index.ts for static folder variable. Insert a global variable for that if needed.
-  if (existsSync(distPath)) {
-    rmSync(distPath, {recursive: true, force: true})
+  if (existsSync(config.distFolder)) {
+    rmSync(config.distFolder, {recursive: true, force: true})
   }
 }
 
 function createFolders() {
-  const foldersPaths = [join(distPath, 'data', 'links'), join(distPath, 'assets')]
+  const foldersPaths = [join(config.distFolder, 'data', 'links'), join(config.distFolder, 'assets', 'html')]
   for (const folderPath of foldersPaths) {
     try {
     mkdirSync(folderPath, {recursive: true})
@@ -19,11 +17,10 @@ function createFolders() {
     console.log(`Cannot create ${folderPath}. Error: ${err.message}`)
   }
   }
-
 }
 
 function initFiles() {
-  const filesPaths = [join(distPath, 'data', 'labels.json'), join(distPath, 'data', 'links.json')]
+  const filesPaths = [join(config.distFolder, 'data', 'labels.json'), join(config.distFolder, 'data', 'links.json')]
   for (const filePath of filesPaths) {
     try {
       appendFileSync(filePath, '{}',)
