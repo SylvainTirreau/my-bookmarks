@@ -1,7 +1,14 @@
-import {mkdirSync, appendFileSync} from "fs"
+import { mkdirSync, appendFileSync, existsSync, rmSync } from "fs"
+
+function removeDistFolderIfExists() {
+  const distPath = './dist'
+  if (existsSync(distPath)) {
+    rmSync(distPath, {recursive: true, force: true})
+  }
+}
 
 function createFolders() {
-  const path = 'dist/data/links'
+  const path = './dist/data/links'
   try {
     mkdirSync(path, {recursive: true})
   } catch (err: any) {
@@ -10,7 +17,7 @@ function createFolders() {
 }
 
 function initFiles() {
-  const filesPaths = ['dist/data/labels.json', 'dist/data/links.json']
+  const filesPaths = ['./dist/data/labels.json', './dist/data/links.json']
   for (const filePath of filesPaths) {
     try {
       appendFileSync(filePath, '{}',)
@@ -21,7 +28,7 @@ function initFiles() {
 }
 
 if (typeof require !== 'undefined' && require.main === module) {
-  // Todo: remove folders if already exists
+  removeDistFolderIfExists()
   createFolders()
   initFiles()
 }

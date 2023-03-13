@@ -1,0 +1,1 @@
+- Mettre la possibilité de générer l'application dans un autre dossier que le dossier dist (si on veut la générer dans un dépôt à part).
