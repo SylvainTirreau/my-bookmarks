@@ -1,8 +1,8 @@
-import {config} from "./config"
+import {config} from "../src/config"
 import {copyFileSync, rmSync, mkdirSync, cpSync} from "fs";
 
 export function copyFileFromSrcToDist(srcPath: string) {
-  const destPath = srcPath.replace(config.sourceFolder, config.distFolder)
+  const destPath = srcPath.replace(config.sourceFolder, config.distributionFolder)
   try {
     copyFileSync(srcPath, destPath)
     console.log(`"${srcPath}" copy to "${destPath}".`)
@@ -12,7 +12,7 @@ export function copyFileFromSrcToDist(srcPath: string) {
 }
 
 export function removeItemFromDist(srcPath: string) {
-  const destPath = srcPath.replace(config.sourceFolder, config.distFolder)
+  const destPath = srcPath.replace(config.sourceFolder, config.distributionFolder)
   try {
     rmSync(destPath, {recursive: true, force: true})
     console.log(`"${destPath}" removed.`)
@@ -22,7 +22,7 @@ export function removeItemFromDist(srcPath: string) {
 }
 
 export function createFolderToDist(srcPath: string) {
-  const destPath = srcPath.replace(config.sourceFolder, config.distFolder)
+  const destPath = srcPath.replace(config.sourceFolder, config.distributionFolder)
   try {
     mkdirSync(destPath)
     console.log(`"${destPath}" created.`)
@@ -32,13 +32,12 @@ export function createFolderToDist(srcPath: string) {
 }
 
 export function copyHtmlSrcFolderToDistFolder() {
-  const distHtmlTemplatesPath = config.htmlTemplatesFolder.replace(config.sourceFolder, config.distFolder)
-  removeItemFromDist(distHtmlTemplatesPath)
+  removeItemFromDist(config.htmlTemplatesFolderDist)
   try {
-    cpSync(config.htmlTemplatesFolder, distHtmlTemplatesPath, {recursive: true, force: true})
-    console.log(`Html assets are copied in "${config.distFolder}".`)
+    cpSync(config.htmlTemplatesFolderSrc, config.htmlTemplatesFolderDist, {recursive: true, force: true})
+    console.log(`Html assets are copied in "${config.distributionFolder}".`)
   } catch (err: any) {
-    console.log(`Cannot copy html assets in "${config.distFolder}". Error: ${err.message}`)
+    console.log(`Cannot copy "${config.htmlTemplatesFolderSrc}" in "${config.htmlTemplatesFolderDist}". Error: ${err.message}`)
   }
 }
 

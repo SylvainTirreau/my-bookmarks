@@ -12,28 +12,31 @@ app.set('view engine', 'html')
 nunjucks.configure(join('dist', 'assets', 'html'), {autoescape: true, express: app, watch: true})
 
 app.get('/', ((req: Request, res: Response) => {
-  res.render('index.html', { title: "Mon  titre à moi que j'ai", test: "OK" })
+  res.render('index.html', { title: "Mon  titre à moi que j'ai", test: `OK - ` })
 }))
 
-app.get('/labels/:labels', ((req: Request, res: Response) => {
-  res.render('index.html', { title: "Mon  titre à moi que j'ai", test: req.params.labels })
+app.get('/labels/:labelsList', ((req: Request, res: Response) => {
+  res.render('index.html', { title: "Mon  titre à moi que j'ai", test: `${req.params.labelsList} - ` })
 }))
 
 app.post('/add-link', (req, res) => {
   if (req.body.url !== '') {
     const link = new Link()
-    link.createLinkData({
+    const linkCreated = link.createLinkData({
       url: req.body.url,
       title: req.body.title,
       description: req.body.description
     })
-    res.render('index.html', { title: "", test: req.body.url })
+    linkCreated.then(() => {
+      // Res.redirect
+      // or change variables...
+      res.render('index.html', { title: "", test: req.body.url })
+    })
   }
-
 })
 
 app.use((req: Request, res: Response) => {
-  //res.status(404).render('error.html', { code: '404', text: 'Cette URL ne mène nulle part' })
+  res.status(404).send('Erreur 404: Page not found!')
 })
 
 app.listen(port, () => {

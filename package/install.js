@@ -1,15 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
-const path_1 = require("path");
-const config_1 = require("./config");
+const config_1 = require("../src/config");
 function removeDistFolderIfExists() {
-    if ((0, fs_1.existsSync)(config_1.config.distFolder)) {
-        (0, fs_1.rmSync)(config_1.config.distFolder, { recursive: true, force: true });
+    if ((0, fs_1.existsSync)(config_1.config.distributionFolder)) {
+        (0, fs_1.rmSync)(config_1.config.distributionFolder, { recursive: true, force: true });
     }
 }
 function createFolders() {
-    const foldersPaths = [(0, path_1.join)(config_1.config.distFolder, 'data', 'links'), (0, path_1.join)(config_1.config.distFolder, 'assets', 'html')];
+    const foldersPaths = [config_1.config.linksFolderDist, config_1.config.htmlTemplatesFolderDist, config_1.config.screenshotsFolderDist];
     for (const folderPath of foldersPaths) {
         try {
             (0, fs_1.mkdirSync)(folderPath, { recursive: true });
@@ -20,7 +19,7 @@ function createFolders() {
     }
 }
 function initFiles() {
-    const filesPaths = [(0, path_1.join)(config_1.config.distFolder, 'data', 'labels.json'), (0, path_1.join)(config_1.config.distFolder, 'data', 'links.json')];
+    const filesPaths = [config_1.config.labelsFile, config_1.config.linksFile];
     for (const filePath of filesPaths) {
         try {
             (0, fs_1.appendFileSync)(filePath, '{}');

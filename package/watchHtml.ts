@@ -1,5 +1,5 @@
 import { watch } from 'chokidar'
-import { config } from './config'
+import { config } from '../src/config'
 import { join } from 'path'
 import {copyFileFromSrcToDist, createFolderToDist, removeItemFromDist} from "./utils";
 

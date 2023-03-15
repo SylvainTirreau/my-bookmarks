@@ -1,8 +1,9 @@
 import {readFileSync} from "node:fs"
 import {join} from 'path'
 import {get} from 'node:https'
-import { parse} from 'node-html-parser'
-import {linkJsonData, newLinkFormData} from "../interfaces";
+import {parse} from 'node-html-parser'
+import {linkJsonData, newLinkFormData} from "../interfaces"
+import {createWebsiteScreenshot} from "./browser"
 
 /**
  * Add, get, remove, or modify link
@@ -18,33 +19,48 @@ export class Link {
 
   // Private function (no testable)
   private _writeLinkDataInJson(linkJsonData: linkJsonData) {
-
+    console.log(linkJsonData)
+    // Créer un fichier pour lien contenant les infos.
+    // Créer une entrée dans link data.
   }
 
   // Public functions (testable)
   // Créer une interface
-  createLinkData(newLinkFormData: newLinkFormData) {
+  async createLinkData(newLinkFormData: newLinkFormData) {
     let htmlText = ''
     get(newLinkFormData.url, res => {
       res.on('data', (data: any) => {
         htmlText += data.toString()
       })
-      res.on('end', (data: any) => {
+      res.on('end', async (data: any) => {
         const he = require('he')
         const date = new Date()
         const homePage = parse(he.decode(htmlText))
-        const titleTag = homePage.getElementsByTagName('title').toString()
+        const titleTag = (homePage.getElementsByTagName('title').length === 0) ? 'Pas de titre sur la cible.' : homePage.getElementsByTagName('title').toString()
         const title = (newLinkFormData.title === '') ? titleTag.replace('<title>', '').replace('</title>', '') : newLinkFormData.title
         const descriptionMetaTag = homePage.querySelector('meta[name="description"]')
-        const description = (newLinkFormData.description === '') ? descriptionMetaTag!.getAttribute('content') : newLinkFormData.description
-        const timestamp = Date.parse(date.toString()) / 1000
-        this._writeLinkDataInJson({
-          url: newLinkFormData.url,
-          title: title,
-          description: description,
-          thumbnailPath: 'none',
-          timestamp: timestamp.toString()
-        })
+        let description: string | undefined
+        if (descriptionMetaTag === null) {
+          description = "Pas de description sur la cible."
+        } else {
+          description = (newLinkFormData.description === '') ? descriptionMetaTag.getAttribute('content') : newLinkFormData.description
+        }
+        const timestamp = (Date.parse(date.toString()) / 1000).toString()
+        const screenshotCreated = createWebsiteScreenshot(newLinkFormData.url, timestamp)
+        let screenshotUrl: string
+        screenshotCreated
+          .then((created) => {
+            screenshotUrl = (created) ? join('dist', 'assets', 'screenshots', `${timestamp}.png`) : 'none'
+          })
+          .then(() => {
+            this._writeLinkDataInJson({
+              url: newLinkFormData.url,
+              title: title,
+              description: description,
+              thumbnailPath: screenshotUrl,
+              timestamp: timestamp.toString()
+            })
+          })
       })
     }).on('error', (err: Error) => {
       if (err.message.includes('ENOTFOUND')) {
@@ -72,7 +88,7 @@ export class Link {
 if (typeof require !== 'undefined' && require.main === module) {
   const testLink = new Link()
   testLink.createLinkData({
-    url: 'https://sylvain.tirreauauau.fr',
+    url: 'https://sylvain.tirreau.fr',
     title: '',
     description: ''
   })

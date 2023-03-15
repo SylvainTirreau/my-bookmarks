@@ -1,15 +1,14 @@
 import { mkdirSync, appendFileSync, existsSync, rmSync } from "fs"
-import { join } from 'path'
-import { config } from './config'
+import { config } from '../src/config'
 
 function removeDistFolderIfExists() {
-  if (existsSync(config.distFolder)) {
-    rmSync(config.distFolder, {recursive: true, force: true})
+  if (existsSync(config.distributionFolder)) {
+    rmSync(config.distributionFolder, {recursive: true, force: true})
   }
 }
 
 function createFolders() {
-  const foldersPaths = [join(config.distFolder, 'data', 'links'), join(config.distFolder, 'assets', 'html')]
+  const foldersPaths = [config.linksFolderDist, config.htmlTemplatesFolderDist, config.screenshotsFolderDist]
   for (const folderPath of foldersPaths) {
     try {
     mkdirSync(folderPath, {recursive: true})
@@ -20,7 +19,7 @@ function createFolders() {
 }
 
 function initFiles() {
-  const filesPaths = [join(config.distFolder, 'data', 'labels.json'), join(config.distFolder, 'data', 'links.json')]
+  const filesPaths = [config.labelsFile, config.linksFile]
   for (const filePath of filesPaths) {
     try {
       appendFileSync(filePath, '{}',)

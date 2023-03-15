@@ -1,8 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["src", "dist"],
-  "compilerOptions": {
-    "rootDir": "./package",
-    "outDir": "./package"
-  }
+  "include": [
+    "src/config.ts", "package"],
+  "exclude": ["src", "dist", "playwright", "tests-examples", "playwright.config.ts"]
 }
