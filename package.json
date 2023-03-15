@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/SylvainTirreau/my-bookmarks#readme",
   "devDependencies": {
+    "@playwright/test": "^1.31.2",
     "@types/express": "^4.17.17",
     "@types/node": "^18.15.0",
     "@types/nunjucks": "^3.2.2",
