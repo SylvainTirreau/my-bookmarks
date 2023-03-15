@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["package", "dist", "*.ts", "*.js", "src/assets/ts"],
+  "exclude": ["package", "dist", "*.ts", "*.js", "src/assets/ts", "playwright", "tests-examples"],
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist"
