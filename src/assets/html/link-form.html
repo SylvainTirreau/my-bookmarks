@@ -1,0 +1,35 @@
+{% extends "main-layout.html" %}
+
+{% block body %}
+    <div class="fill-screen">
+        <div class="container">
+            <div class="row">
+                <div class="col-4">&nbsp;</div>
+                <div class="col-4">
+                    <form action="/add-link" method="post">
+                        <div>
+                            <label>Lien*
+                                <input type="text" name="url" placeholder="url" class="form-control" required>
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                Titre <small>(Si vide, prendra le titre du lien - si présent)</small>
+                                <input type="text" name="title" placeholder="Titre" class="form-control">
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                Description <small>(Si vide, prendra la description du lien - si présente)</small>
+                                <input type="text" name="description" placeholder="Description" class="form-control">
+                            </label>
+                        </div>
+                        <div><input id="add-link" type="submit" value="Valider" class="btn btn-primary"></div>
+                    </form>
+                </div>
+                <div class="col-4">&nbsp;</div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
