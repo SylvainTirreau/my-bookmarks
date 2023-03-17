@@ -6,7 +6,7 @@
     "install": "node package/install.js",
     "watch-package": "tsc --watch --project tsconfig.package.json",
     "build-package": "tsc --project tsconfig.package.json",
-    "watch-app": "node package/watchHtml.js & tsc --watch --project tsconfig.app.json & npx esbuild src/assets/ts/index.ts --bundle --outdir=dist/assets/js --watch & npx sass --watch src/assets/scss:dist/assets/css & node dist/index.js",
+    "watch-app": "node package/watchHtml.js & tsc --watch --project tsconfig.app.json & npx sass --watch src/assets/scss:dist/assets/css & node dist/index.js & npx esbuild src/assets/ts/index.ts --bundle --outdir=dist/assets/js --watch",
     "build-app": "node package/buildHtml.js && npx esbuild src/assets/ts/index.ts --bundle --outdir=dist/assets/js && tsc --project tsconfig.app.json && npx sass src/assets/scss:dist/assets/css",
     "start": "node dist/index.js"
   },

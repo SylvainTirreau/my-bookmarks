@@ -9,6 +9,14 @@ This a development version: don't use it, it's not yet functional.
 
 This package build a distribution version of the webapp.
 
+## Pre installation
+
+Run `npm install`.
+
+This will install all npm dependencies.
+
+Install [Bourbon](https://www.bourbon.io/).
+
 ## Build the distribution version
 
 ### Step 1 : build package
