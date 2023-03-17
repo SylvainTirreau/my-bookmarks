@@ -11,3 +11,8 @@ export interface linkJsonData {
   thumbnailPath: string
   timestamp: string
 }
+
+export interface resultPromiseForFront {
+  success: boolean,
+  message: string
+}

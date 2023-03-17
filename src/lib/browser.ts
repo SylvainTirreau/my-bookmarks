@@ -1,9 +1,10 @@
 import {chromium} from "@playwright/test"
 import { join } from 'node:path'
 import { existsSync} from "node:fs"
+import { config } from '../config'
 
 export async function createWebsiteScreenshot(url: string, timestamp: string): Promise<boolean> {
-  const screenShotUrl = join('dist', 'assets', 'screenshots', `${timestamp}.png`)
+  const screenShotUrl = join(config.screenshotsFolderDist, `${timestamp}.png`)
   let browser = await chromium.launch()
 
   let page = await browser.newPage()
