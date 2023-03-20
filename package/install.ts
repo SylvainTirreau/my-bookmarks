@@ -1,28 +1,28 @@
-import { mkdirSync, appendFileSync, existsSync, rmSync } from "fs"
+import { mkdirSync, appendFileSync, existsSync, rmSync } from 'fs'
 import { config } from '../src/config'
 
-function removeDistFolderIfExists() {
+function removeDistFolderIfExists () {
   if (existsSync(config.distributionFolder)) {
-    rmSync(config.distributionFolder, {recursive: true, force: true})
+    rmSync(config.distributionFolder, { recursive: true, force: true })
   }
 }
 
-function createFolders() {
-  const foldersPaths = [config.linksFolderDist, config.htmlTemplatesFolderDist, config.screenshotsFolderDist]
+function createFolders () {
+  const foldersPaths = [config.linksFolderDist, config.labelsFolderDist, config.htmlTemplatesFolderDist, config.screenshotsFolderDist]
   for (const folderPath of foldersPaths) {
     try {
-    mkdirSync(folderPath, {recursive: true})
-  } catch (err: any) {
-    console.log(`Cannot create ${folderPath}. Error: ${err.message}`)
-  }
+      mkdirSync(folderPath, { recursive: true })
+    } catch (err: any) {
+      console.log(`Cannot create ${folderPath}. Error: ${err.message}`)
+    }
   }
 }
 
-function initFiles() {
+function initFiles () {
   const filesPaths = [config.labelsFile, config.linksFile]
   for (const filePath of filesPaths) {
     try {
-      appendFileSync(filePath, '{}',)
+      appendFileSync(filePath, '{}')
     } catch (err: any) {
       console.log(`Cannot create ${filePath}. Error: ${err.message!}`)
     }

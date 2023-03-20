@@ -46,6 +46,12 @@
     </div>
 </header>
 {% block body %}{% endblock %}
+<div id="labels-wrapper" class="container-fluid{% if hide_labels_wrapper %} hide{% endif %}">
+    <div id="labels-btn">Labels</div>
+    <div class="container">
+        Liste des labels
+    </div>
+</div>
 <div id="waiting-screen" class="hide">
     <div class="wrapper">
         <div class="ring"></div>

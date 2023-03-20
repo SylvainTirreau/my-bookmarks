@@ -9,6 +9,7 @@ export const config = {
   sourceFolder,
   distributionFolder,
   linksFolderDist: join(distributionFolder, 'data', 'links'),
+  labelsFolderDist: join(distributionFolder, 'data', 'labels'),
   screenshotsFolderDist: join(distributionFolder, 'assets', 'screenshots'),
   htmlTemplatesFolderSrc: join(sourceFolder, 'assets', 'html'),
   htmlTemplatesFolderDist: join(distributionFolder, 'assets', 'html'),

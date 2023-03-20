@@ -20,6 +20,10 @@ $border-color-label: tint(background-color(), 15%);
 body {
   position: relative;
 
+  .hide {
+    display: none;
+  }
+
   header {
     position: absolute;
     display: block;
@@ -206,7 +210,6 @@ body {
 
     .text {
       @include rfs(1.5rem 0 0 0, margin);
-      @include rfs(0.2rem, letter-spacing);
       font-weight: 400;
     }
 

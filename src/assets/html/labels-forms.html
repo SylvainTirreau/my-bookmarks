@@ -6,7 +6,21 @@
             <div class="row">
                 <div class="col-4">&nbsp;</div>
                 <div class="col-4">
-
+                    <form action="/add-label" method="post">
+                        <div>
+                            <label>Label*
+                                <input id="label-name" type="text" name="label_name" placeholder="Nom du label" class="form-control" required>
+                                <input id="label-slug" type="hidden" name="label_slug" value="">
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                Description
+                                <input type="text" name="description" placeholder="Description" class="form-control">
+                            </label>
+                        </div>
+                        <div><input id="add-label" type="submit" value="Valider" class="btn btn-primary"></div>
+                    </form>
                 </div>
                 <div class="col-4">&nbsp;</div>
             </div>
