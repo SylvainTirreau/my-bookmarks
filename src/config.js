@@ -9,8 +9,7 @@ const distributionFolder = 'dist';
 exports.config = {
     sourceFolder,
     distributionFolder,
-    linksFolderDist: (0, path_1.join)(distributionFolder, 'data', 'links'),
-    labelsFolderDist: (0, path_1.join)(distributionFolder, 'data', 'labels'),
+    dataFolderDist: (0, path_1.join)(distributionFolder, 'data'),
     screenshotsFolderDist: (0, path_1.join)(distributionFolder, 'assets', 'screenshots'),
     htmlTemplatesFolderSrc: (0, path_1.join)(sourceFolder, 'assets', 'html'),
     htmlTemplatesFolderDist: (0, path_1.join)(distributionFolder, 'assets', 'html'),

@@ -46,12 +46,34 @@
     </div>
 </header>
 {% block body %}{% endblock %}
-<div id="labels-wrapper" class="container-fluid{% if hide_labels_wrapper %} hide{% endif %}">
-    <div id="labels-btn">Labels</div>
+
+<div id="labels-wrapper"
+     class="container-fluid{% if hide_labels_wrapper %} hide{% endif %}{% if page_id == 'settings-labels' %} full-screen{% endif %}">
+    <div id="labels-btn" data-state='fold'>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+            <path fill="currentColor"
+                  d="M201.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L224 173.3 54.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/>
+        </svg>
+        <span>Labels</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <!--! Font Awesome Pro 6.3.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+            <path fill="currentColor"
+                  d="M201.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L224 173.3 54.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/>
+        </svg>
+    </div>
     <div class="container">
-        Liste des labels
+        <div class="row">
+            <div id="labels-container-title" class="col-12">
+                {{ label_container_title }}
+            </div>
+        </div>
+        <div class="row">
+            <div id="labels-container-body" class="col-12">{% block label_body %}{% endblock %}</div>
+        </div>
     </div>
 </div>
+
 <div id="waiting-screen" class="hide">
     <div class="wrapper">
         <div class="ring"></div>

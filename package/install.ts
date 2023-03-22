@@ -8,7 +8,7 @@ function removeDistFolderIfExists () {
 }
 
 function createFolders () {
-  const foldersPaths = [config.linksFolderDist, config.labelsFolderDist, config.htmlTemplatesFolderDist, config.screenshotsFolderDist]
+  const foldersPaths = [config.dataFolderDist, config.htmlTemplatesFolderDist, config.screenshotsFolderDist]
   for (const folderPath of foldersPaths) {
     try {
       mkdirSync(folderPath, { recursive: true })

@@ -12,11 +12,29 @@ export interface linkData {
   timestamp: string
 }
 
+export interface linksData {
+  url: string
+  title: string
+  description: string | undefined
+  thumbnailPath: string
+  timestamp: string
+  relatedLabels: string[]
+}
+
 export interface labelData {
   name: string
   slug: string
   description: string | undefined
 }
+
+export interface labelsData {
+  title: string
+  slug: string
+  description: string
+  relatedLinks: string[]
+}
+
+export type dataContent = linkData | labelData | linksData | labelsData
 
 export interface resultPromiseForFront {
   success: boolean
@@ -25,6 +43,5 @@ export interface resultPromiseForFront {
 
 export const labelsDataType = 'labels'
 export const linksDataType = 'links'
-export const linkDataType = 'link'
 
-export type dataType = typeof labelsDataType | typeof linksDataType | typeof linkDataType
+export type dataType = typeof labelsDataType | typeof linksDataType

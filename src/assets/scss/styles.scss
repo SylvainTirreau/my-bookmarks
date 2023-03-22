@@ -7,6 +7,22 @@ $primary: #f4661b;
   @return rgba(14, 17, 17, $opacity);
 }
 
+@mixin main-form() {
+  form {
+    label {
+      width: 100%;;
+      @include rfs(0.85rem, margin-top);
+    }
+
+    input {
+      &[type=submit] {
+        @include rfs(0.85rem, margin-top);
+        @include rfs(0.85rem, margin-bottom);
+      }
+    }
+  }
+}
+
 $background-color-label: tint(background-color(), 5%);
 $border-color-label: tint(background-color(), 15%);
 
@@ -131,29 +147,18 @@ body {
     overflow: hidden;
     z-index: 0;
 
-    form {
-      label {
-        width: 100%;;
-        @include rfs(0.85rem, margin-top);
-      }
-
-      input {
-        &[type=submit] {
-          @include rfs(0.85rem, margin-top);
-          @include rfs(0.85rem, margin-bottom);
-        }
-      }
-
-    }
+    @include main-form;
   }
 
   #labels-wrapper {
+    $margin-top: 7rem;
     position: fixed;
-    bottom: 0;
+    top: calc(100% - 1px);
     background-color: $background-color-label;
-    @include rfs(2rem 0, padding);
     border-top: 1px solid $border-color-label;
     z-index: 5;
+    transition: top 200ms;
+    max-height: calc(100vh - #{$margin-top});
 
     #labels-btn {
       position: absolute;
@@ -171,6 +176,47 @@ body {
       letter-spacing: 2px;
       font-weight: 400;
       @include font-size(0.8rem);
+
+      &:hover {
+        cursor: pointer;
+        color: $primary;
+      }
+
+      span {
+        @include rfs(0 0.5rem, padding);
+      }
+
+      svg {
+        width: 0.5rem;
+
+        &.unfold {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    .container {
+      overflow: hidden;
+      height: 100%;
+
+      #labels-container-title {
+        text-align: center;
+        font-weight: 400;
+        @include rfs(1.2rem 0, padding);
+        @include font-size(1.2rem);
+      }
+
+      #labels-container-body {
+        max-height: 100%;
+        overflow-y: scroll;
+
+        @include main-form;
+      }
+    }
+
+    &.full-screen {
+      top: #{$margin-top};
+      height: calc(100vh - #{$margin-top});
     }
   }
 

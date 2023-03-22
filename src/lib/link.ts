@@ -2,19 +2,22 @@ import { join } from 'path'
 import { get } from 'node:https'
 import { parse } from 'node-html-parser'
 import type { linkData, newLinkFormData, resultPromiseForFront } from '../interfaces'
+import { linksDataType } from '../interfaces'
 import { createWebsiteScreenshot } from './browser'
 import { config } from '../config'
 import { Data } from './data'
 import * as he from 'he'
+import { showResolveMessage } from './utils'
 
-function writeLinkDataInJson (linkJsonData: linkData): void {
+async function writeLinkDataInJson (linkJsonData: linkData, resolveMsg: string = ''): Promise<string> {
+  showResolveMessage(resolveMsg)
   const data = new Data()
-  const linkData = new Map<any, any>(Object.entries(linkJsonData))
-  data.writeDataToFile(join(config.linksFolderDist, `${linkJsonData.timestamp}.json`), linkData)
-  data.insertItemInItemsJson(linkJsonData.timestamp, 'links')
+  return await data.init()
+    .then(async resolve => await data.updateItemsWithNewItem(linksDataType, linkJsonData, resolve))
 }
 
-export async function createLinkDataFile (newLinkFormData: newLinkFormData): Promise<resultPromiseForFront> {
+export async function createLinkDataFile (newLinkFormData: newLinkFormData, resolveMsg: string = ''): Promise<resultPromiseForFront> {
+  showResolveMessage(resolveMsg)
   return await new Promise<resultPromiseForFront>((resolve, reject) => {
     const result: resultPromiseForFront = { success: false, message: '' }
     let htmlText = ''
@@ -41,7 +44,7 @@ export async function createLinkDataFile (newLinkFormData: newLinkFormData): Pro
           .then((created) => {
             screenshotUrl = (created) ? join(config.screenshotsFolderDist, `${timestamp}.png`) : 'none'
           })
-          .then(() => {
+          .then(async () => {
             const linkData = {
               url: newLinkFormData.url,
               title,
@@ -49,7 +52,7 @@ export async function createLinkDataFile (newLinkFormData: newLinkFormData): Pro
               thumbnailPath: screenshotUrl,
               timestamp: timestamp.toString()
             }
-            writeLinkDataInJson(linkData)
+            await writeLinkDataInJson(linkData)
           })
           .then(() => {
             result.success = true

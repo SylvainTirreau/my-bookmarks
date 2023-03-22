@@ -1,4 +1,4 @@
-import {join} from "path";
+import { join } from 'path'
 
 // You just need to change that.
 const sourceFolder = 'src'
@@ -8,8 +8,7 @@ const distributionFolder = 'dist'
 export const config = {
   sourceFolder,
   distributionFolder,
-  linksFolderDist: join(distributionFolder, 'data', 'links'),
-  labelsFolderDist: join(distributionFolder, 'data', 'labels'),
+  dataFolderDist: join(distributionFolder, 'data'),
   screenshotsFolderDist: join(distributionFolder, 'assets', 'screenshots'),
   htmlTemplatesFolderSrc: join(sourceFolder, 'assets', 'html'),
   htmlTemplatesFolderDist: join(distributionFolder, 'assets', 'html'),

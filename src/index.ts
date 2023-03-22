@@ -3,8 +3,9 @@ import type { Express, Request, Response } from 'express'
 import nunjucks from 'nunjucks'
 import { join } from 'path'
 import { createLinkDataFile } from './lib/link'
-import { type resultPromiseForFront } from './interfaces'
-import { createLabelDataFile } from './lib/label'
+import type { resultPromiseForFront } from './interfaces'
+import { writeLabelDataInJson } from './lib/label'
+import { Data } from './lib/data'
 
 const app: Express = express()
 const port = 3005
@@ -21,7 +22,9 @@ const pageData = {
   version: appVersion,
   links_menu_active: false,
   labels_menu_active: false,
-  hide_labels_wrapper: false
+  hide_labels_wrapper: false,
+  label_container_title: '',
+  main_data: new Map<any, any>()
 }
 
 app.get('/', (req: Request, res: Response) => {
@@ -29,6 +32,7 @@ app.get('/', (req: Request, res: Response) => {
   pageData.labels_menu_active = false
   pageData.links_menu_active = false
   pageData.hide_labels_wrapper = false
+  pageData.label_container_title = 'Afficher les liens ayant les labels suivants'
   res.render('main.html', pageData)
 })
 
@@ -37,14 +41,18 @@ app.get('/settings-links', (req: Request, res: Response) => {
   pageData.links_menu_active = true
   pageData.labels_menu_active = false
   pageData.hide_labels_wrapper = false
+  pageData.label_container_title = 'Choisir les labels à associer à ce lien'
   res.render('link-form.html', pageData)
 })
 
 app.get('/settings-labels', (req: Request, res: Response) => {
+  const data = new Data()
   pageData.page_id = 'settings-labels'
   pageData.links_menu_active = false
   pageData.labels_menu_active = true
-  pageData.hide_labels_wrapper = true
+  pageData.hide_labels_wrapper = false
+  pageData.label_container_title = 'Ajouter un label'
+  if (data.labelsData.size > 0) pageData.main_data = data.labelsData
   res.render('labels-forms.html', pageData)
 })
 
@@ -54,6 +62,7 @@ app.get('/labels/:labelsList', (req: Request, res: Response) => {
   pageData.labels_menu_active = false
   pageData.links_menu_active = false
   pageData.hide_labels_wrapper = false
+  pageData.label_container_title = 'Afficher les liens ayant les labels suivants'
   res.render('main.html', pageData)
 })
 
@@ -79,15 +88,14 @@ app.post('/add-link', (req, res) => {
 
 app.post('/add-label', (req, res) => {
   if (req.body.label_name !== '') {
-    const labelCreated = createLabelDataFile({
+    const labelCreated = writeLabelDataInJson({
       name: req.body.label_name,
       slug: req.body.label_slug,
       description: req.body.description
     })
     labelCreated
-      .then((resolve: resultPromiseForFront) => {
-      // Catch the return boolean (resolve.success) and message (resolve.message)
-        res.redirect('/')
+      .then((resolve) => {
+        res.redirect('/settings-labels')
       })
       .catch((reject) => {
 

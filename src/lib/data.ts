@@ -1,79 +1,91 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { config } from '../config'
-import type { dataType } from '../interfaces'
+import type { dataType, dataContent, linksData, labelsData } from '../interfaces'
 import { labelsDataType, linksDataType } from '../interfaces'
+import { showResolveMessage } from './utils'
 
 export class Data {
   labelsData = new Map<any, any>()
   linksData = new Map<any, any>()
 
-  constructor () {
-    this.getDataFromFile('labels')
-    this.getDataFromFile('links')
+  async init (): Promise<string> {
+    return await this.getDataFromFile('labels')
+      .then(async (resolve: string) => await this.getDataFromFile('links', resolve))
   }
 
-  getDataFromFile (dataType: dataType): void {
-    let fileContent: string | Buffer
-    let file: string
-    if (dataType === 'labels') {
-      file = config.labelsFile
-    } else if (dataType === 'links') {
-      file = config.linksFile
-    } else {
-      file = 'none'
-    }
-    const readLabelsFile = new Promise((resolve, reject) => {
+  async getDataFromFile (dataType: dataType, resolveMsg: string = ''): Promise<string> {
+    showResolveMessage(resolveMsg)
+    return await new Promise<string>((resolve) => {
+      let fileContent: string | Buffer
+      let file: string
+      if (dataType === 'labels') file = config.labelsFile
+      else if (dataType === 'links') file = config.linksFile
+      else file = 'none'
+
       try {
         fileContent = readFileSync(file)
-      } catch (err) {
+        if (dataType === 'labels') this.labelsData = jsonToMap(fileContent.toString())
+        else if (dataType === 'links') this.linksData = jsonToMap(fileContent.toString())
+        resolve(`${file} is stored.`)
+      } catch (err: any) {
         console.error(err)
-        reject(err)
+        resolve(err.message)
       }
-      resolve(`${dataType} file read.`)
     })
-    readLabelsFile
-      .then((resolve) => {
-        console.log(resolve)
-        this.labelsData = new Map<any, any>(Object.entries(JSON.parse(fileContent.toString())))
-      })
-      .then(() => {
-        console.log(`${dataType} file content store in ${dataType} data.`)
-      })
-      .catch(reject => {
-        console.log(reject)
-      })
   }
 
-  writeDataToFile (filePath: string, data: Map<any, any>): void {
+  writeDataToFile (filePath: string, data: dataContent, resolveMsg: string = ''): void {
     try {
-      writeFileSync(filePath, JSON.stringify(Object.fromEntries(data)))
+      writeFileSync(filePath, JSON.stringify(data))
     } catch (err) {
       console.error(err)
     }
   }
 
-  insertItemInItemsJson (itemId: string, itemType: dataType): void {
-    let itemData: Map<any, any>
-    let filePath: string
-    if (itemType === labelsDataType) {
-      itemData = this.labelsData
-      filePath = config.labelsFile
-    } else if (itemType === linksDataType) {
-      itemData = this.linksData
-      filePath = config.linksFile
-    }
-    const setNewLink = new Promise((resolve) => {
-      itemData.set(itemId, [])
-      resolve(`Insert "${itemId}" in ${filePath}.`)
+  async insertItemInSavedData (itemType: dataType, givenData: dataContent, resolveMsg: string = ''): Promise<string> {
+    showResolveMessage(resolveMsg)
+    return await new Promise<string>((resolve) => {
+      if (itemType === labelsDataType) {
+        this.labelsData.set((givenData as labelsData).slug, givenData)
+        resolve(`Data for "${(givenData as labelsData).slug}" (${JSON.stringify(givenData)}) has been inserted in saved data.`)
+      } else if (itemType === linksDataType) {
+        this.linksData.set((givenData as linksData).timestamp, givenData)
+        resolve(`Data for "${(givenData as linksData).timestamp}" (${JSON.stringify(givenData)}) has been inserted in saved data.`)
+      }
     })
-    void setNewLink
-      .then(() => {
-        this.writeDataToFile(filePath, itemData)
-        console.log(`Write file "${filePath}".`)
-      })
-      .then(() => {
-        this.getDataFromFile(itemType)
-        console.log(`Get data from new file "${filePath}".`)
-      })
   }
+
+  async writeFileWithNewData (itemType: dataType, givenData: dataContent, resolveMsg: string = ''): Promise<string> {
+    showResolveMessage(resolveMsg)
+    return await new Promise<string>((resolve) => {
+      if (itemType === labelsDataType) {
+        this.writeDataToFile(config.labelsFile, mapToObject(this.labelsData))
+        resolve(`Data (${JSON.stringify(mapToObject(this.labelsData))}) has been written in "${config.labelsFile}.`)
+      } else if (itemType === linksDataType) {
+        this.writeDataToFile(config.linksFile, mapToObject(this.linksData))
+        resolve(`Data (${JSON.stringify(mapToObject(this.linksData))}) has been written in "${config.linksFile}.`)
+      }
+    })
+  }
+
+  async reloadNewData (itemType: dataType, resolveMsg: string = ''): Promise<string> {
+    showResolveMessage(resolveMsg)
+    return await this.getDataFromFile(itemType)
+  }
+
+  // TODO: insert related labels and links in final data (labelsData and LinksData <- rename those)
+  async updateItemsWithNewItem (itemType: dataType, givenData: dataContent, resolveMsg: string = ''): Promise<string> {
+    showResolveMessage(resolveMsg)
+    return await this.insertItemInSavedData(itemType, givenData)
+      .then(async resolve => await this.writeFileWithNewData(itemType, givenData, resolve))
+      .then(async resolve => await this.reloadNewData(itemType, resolve))
+  }
+}
+
+function jsonToMap (data: string): Map<any, any> {
+  return new Map<any, any>(Object.entries(JSON.parse(data)))
+}
+
+function mapToObject (data: Map<any, any>): dataContent {
+  return Object.fromEntries(data)
 }
