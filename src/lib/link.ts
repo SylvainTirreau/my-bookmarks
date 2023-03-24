@@ -1,7 +1,7 @@
 import { join } from 'path'
 import { get } from 'node:https'
 import { parse } from 'node-html-parser'
-import type { linkData, newLinkFormData, resultPromiseForFront } from '../interfaces'
+import type { linksData, newLinkFormData, resultPromiseForFront } from '../interfaces'
 import { linksDataType } from '../interfaces'
 import { createWebsiteScreenshot } from './browser'
 import { config } from '../config'
@@ -9,8 +9,9 @@ import { Data } from './data'
 import * as he from 'he'
 import { showResolveMessage } from './utils'
 
-async function writeLinkDataInJson (linkJsonData: linkData, resolveMsg: string = ''): Promise<string> {
+async function writeLinkDataInJson (linkJsonData: linksData, resolveMsg: string = ''): Promise<string> {
   showResolveMessage(resolveMsg)
+  // Todo : ajouter le related labels à linkjson-data
   const data = new Data()
   return await data.init()
     .then(async resolve => await data.updateItemsWithNewItem(linksDataType, linkJsonData, resolve))
@@ -50,7 +51,8 @@ export async function createLinkDataFile (newLinkFormData: newLinkFormData, reso
               title,
               description,
               thumbnailPath: screenshotUrl,
-              timestamp: timestamp.toString()
+              timestamp: timestamp.toString(),
+              relatedLabels: []
             }
             await writeLinkDataInJson(linkData)
           })

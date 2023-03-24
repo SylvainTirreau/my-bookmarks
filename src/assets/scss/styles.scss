@@ -23,6 +23,30 @@ $primary: #f4661b;
   }
 }
 
+@mixin tooltip() {
+  [role="tooltip"] {
+    visibility: hidden;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 100%;
+    @include rfs(0.25rem 0.5rem, padding);
+    transform: translateX(-50%);
+    background: tint(background-color(), 20%);
+    color: tint(background-color(), 80%);
+  }
+
+  &[aria-describedby]:hover,
+  &[aria-describedby]:focus {
+    position: relative;
+    cursor: help;
+
+    [role="tooltip"] {
+      visibility: visible;
+    }
+  }
+}
+
 $background-color-label: tint(background-color(), 5%);
 $border-color-label: tint(background-color(), 15%);
 
@@ -220,6 +244,60 @@ body {
     }
   }
 
+  .label-wrapper {
+    @include font-size(0.75rem);
+    @include rfs(0.8rem 0, margin);
+    display: flex;
+
+    span {
+      background-color: tint(background-color(), 10%);
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      svg {
+        width: 0.8rem;
+      }
+
+      &.label-name {
+        @include rfs(0.4rem 0.8rem, padding);
+        @include tooltip;
+        border-radius: $border-radius 0 0 $border-radius;
+        border-top: 1px solid tint(background-color(), 18%);
+        border-left: 1px solid tint(background-color(), 18%);
+        border-bottom: 1px solid background-color(0.5);
+        width: 84%;
+        text-transform: uppercase;
+      }
+
+      &.modify-label {
+        @include rfs(0.4rem 0.4rem, padding);
+        cursor: pointer;
+        color: $warning;
+        border-top: 1px solid tint(background-color(), 18%);
+        border-bottom: 1px solid background-color(0.5);
+        width: 8%;
+        text-align: center;
+      }
+
+      &.remove-label {
+        @include rfs(0.4rem 0.4rem, padding);
+        cursor: pointer;
+        color: $danger;
+        border-top: 1px solid tint(background-color(), 18%);
+        border-radius: 0 $border-radius $border-radius 0;
+        border-right: 1px solid background-color(0.5);
+        border-bottom: 1px solid background-color(0.5);
+        width: 8%;
+        text-align: center;
+      }
+    }
+
+
+  }
+
   #waiting-screen {
     position: absolute;
     overflow: hidden;
@@ -234,6 +312,7 @@ body {
     flex-direction: column;
     opacity: 1;
     transition: top 20ms, opacity 200ms;
+    z-index: 10;
 
     &.hide {
       opacity: 0;
@@ -262,19 +341,15 @@ body {
     @keyframes ring {
       0% {
         transform: rotate(0deg);
-        @include rfs(0.05rem 0.15rem 0.09rem #e65c00, box-shadow);
+        @include rfs(0.05rem 0.15rem 0.09rem $primary, box-shadow);
       }
-      33% {
+      50% {
         transform: rotate(120deg);
-        @include rfs(0.05rem 0.15rem 0.09rem #0caffa, box-shadow);
-      }
-      66% {
-        transform: rotate(240deg);
-        @include rfs(0.05rem 0.15rem 0.09rem #880c0e, box-shadow);
+        @include rfs(0.05rem 0.15rem 0.09rem rgba($primary, 0.35), box-shadow);
       }
       100% {
         transform: rotate(360deg);
-        @include rfs(0.05rem 0.15rem 0.09rem #e65c00, box-shadow);
+        @include rfs(0.05rem 0.15rem 0.09rem $primary, box-shadow);
       }
     }
   }

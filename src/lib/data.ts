@@ -34,12 +34,28 @@ export class Data {
     })
   }
 
-  writeDataToFile (filePath: string, data: dataContent, resolveMsg: string = ''): void {
-    try {
-      writeFileSync(filePath, JSON.stringify(data))
-    } catch (err) {
-      console.error(err)
+  getEntry (dataType: dataType, entryKey: string, resolveMsg: string = ''): Record<string, object> {
+    showResolveMessage(resolveMsg)
+    if (dataType === labelsDataType) {
+      return this.labelsData.get(entryKey)
+    } else if (dataType === linksDataType) {
+      return this.linksData.get(entryKey)
+    } else {
+      return this.linksData.get(entryKey)
     }
+  }
+
+  async writeDataToFile (filePath: string, data: dataContent, resolveMsg: string = ''): Promise<string> {
+    showResolveMessage(resolveMsg)
+    return await new Promise<string>((resolve, reject) => {
+      try {
+        writeFileSync(filePath, JSON.stringify(data))
+        resolve(`${filePath} written.`)
+      } catch (err) {
+        console.error(err)
+        reject(err)
+      }
+    })
   }
 
   async insertItemInSavedData (itemType: dataType, givenData: dataContent, resolveMsg: string = ''): Promise<string> {
@@ -55,15 +71,53 @@ export class Data {
     })
   }
 
-  async writeFileWithNewData (itemType: dataType, givenData: dataContent, resolveMsg: string = ''): Promise<string> {
+  async modifyItemInSavedData (itemType: dataType, oldKey: string, givenData: dataContent, resolveMsg: string = ''): Promise<string> {
+    showResolveMessage(resolveMsg)
+    return await new Promise<string>((resolve) => {
+      if (itemType === labelsDataType) {
+        this.labelsData.delete(oldKey)
+        this.labelsData.set((givenData as labelsData).slug, givenData)
+        resolve(`Data for "${(givenData as labelsData).slug}" (${JSON.stringify(givenData)}) has been modified in saved data.`)
+      } else if (itemType === linksDataType) {
+        this.linksData.delete(oldKey)
+        this.linksData.set((givenData as linksData).timestamp, givenData)
+        resolve(`Data for "${(givenData as linksData).timestamp}" (${JSON.stringify(givenData)}) has been modified in saved data.`)
+      }
+    })
+  }
+
+  async removeItemInSavedData (itemType: dataType, oldKey: string, resolveMsg: string = ''): Promise<string> {
+    showResolveMessage(resolveMsg)
+    return await new Promise<string>((resolve) => {
+      if (itemType === labelsDataType) {
+        this.labelsData.delete(oldKey)
+        resolve(`${oldKey} has been removed in saved data.`)
+      } else if (itemType === linksDataType) {
+        this.linksData.delete(oldKey)
+        resolve(`${oldKey} has been removed in saved data.`)
+      }
+    })
+  }
+
+  async writeFileWithNewData (itemType: dataType, resolveMsg: string = ''): Promise<string> {
     showResolveMessage(resolveMsg)
     return await new Promise<string>((resolve) => {
       if (itemType === labelsDataType) {
         this.writeDataToFile(config.labelsFile, mapToObject(this.labelsData))
-        resolve(`Data (${JSON.stringify(mapToObject(this.labelsData))}) has been written in "${config.labelsFile}.`)
+          .then(() => {
+            resolve(`Data (${JSON.stringify(mapToObject(this.labelsData))}) has been written in "${config.labelsFile}.`)
+          })
+          .catch(() => {
+            resolve(`Data (${JSON.stringify(mapToObject(this.labelsData))}) has not been written in "${config.labelsFile}.`)
+          })
       } else if (itemType === linksDataType) {
         this.writeDataToFile(config.linksFile, mapToObject(this.linksData))
-        resolve(`Data (${JSON.stringify(mapToObject(this.linksData))}) has been written in "${config.linksFile}.`)
+          .then(() => {
+            resolve(`Data (${JSON.stringify(mapToObject(this.linksData))}) has been written in "${config.linksFile}.`)
+          })
+          .catch(() => {
+            resolve(`Data (${JSON.stringify(mapToObject(this.linksData))}) has not been written in "${config.linksFile}.`)
+          })
       }
     })
   }
@@ -73,19 +127,32 @@ export class Data {
     return await this.getDataFromFile(itemType)
   }
 
-  // TODO: insert related labels and links in final data (labelsData and LinksData <- rename those)
   async updateItemsWithNewItem (itemType: dataType, givenData: dataContent, resolveMsg: string = ''): Promise<string> {
     showResolveMessage(resolveMsg)
     return await this.insertItemInSavedData(itemType, givenData)
-      .then(async resolve => await this.writeFileWithNewData(itemType, givenData, resolve))
+      .then(async resolve => await this.writeFileWithNewData(itemType, resolve))
+      .then(async resolve => await this.reloadNewData(itemType, resolve))
+  }
+
+  async updateItemsWithModifiedItem (itemType: dataType, oldKey: string, givenData: dataContent, resolveMsg: string = ''): Promise<string> {
+    showResolveMessage(resolveMsg)
+    return await this.modifyItemInSavedData(itemType, oldKey, givenData)
+      .then(async resolve => await this.writeFileWithNewData(itemType, resolve))
+      .then(async resolve => await this.reloadNewData(itemType, resolve))
+  }
+
+  async updateItemsWithRemovedItem (itemType: dataType, oldKey: string, resolveMsg: string = ''): Promise<string> {
+    showResolveMessage(resolveMsg)
+    return await this.removeItemInSavedData(itemType, oldKey)
+      .then(async resolve => await this.writeFileWithNewData(itemType, resolve))
       .then(async resolve => await this.reloadNewData(itemType, resolve))
   }
 }
 
-function jsonToMap (data: string): Map<any, any> {
+export function jsonToMap (data: string): Map<any, any> {
   return new Map<any, any>(Object.entries(JSON.parse(data)))
 }
 
-function mapToObject (data: Map<any, any>): dataContent {
+export function mapToObject (data: Map<any, any>): dataContent {
   return Object.fromEntries(data)
 }

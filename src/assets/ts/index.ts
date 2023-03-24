@@ -16,8 +16,14 @@ if ((domElements.get('labelsWrapper')?.classList.contains('hide')) === false) {
 if (document.body.dataset.id === 'settings-links') domElements.get('addLinkSubmitBtn')?.addEventListener('click', loadWaitingScreen)
 
 // "Add label" page
-if (document.body.dataset.id === 'settings-labels') {
-  domElements.get('addLabelSubmitBtn')?.addEventListener('click', loadWaitingScreen)
+if (document.body.dataset.id === 'settings-labels' || document.body.dataset.id === 'modify-label') {
   domElements.get('labelName')?.addEventListener('keyup', insertSlugifiedLabelInFormFromKeyboardInput)
   setLabelsContainerBodyHeight()
 }
+
+// Add waiting screen event listener
+document.querySelectorAll('[data-progress-on-click]').forEach((element) => {
+  if ((element as HTMLElement).dataset.progressOnClick === 'true') {
+    element.addEventListener('click', loadWaitingScreen)
+  }
+})
